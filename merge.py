@@ -88,6 +88,17 @@ def merge_all(dir_path):
 		item.set_index(['ts'], inplace=True)
 		filtered_data.append(item)
 
+	# merging dataframes into a single one
+	result = pd.concat(filtered_data, axis=1, join='outer')
+
+	# make up file name
+	prefix = os.path.basename(os.path.normpath(dir_path)).replace("_", "-")
+	output_file_name = f"{prefix}_{start_date.strftime('%m-%d-%Y')}_{end_date.strftime('%m-%d-%Y')}_{sensor_count}.csv"
+	current_path = os.path.abspath(os.path.dirname(sys.argv[0]))
+
+	# create csv from result dataframe
+	result.to_csv(os.path.join(current_path, output_file_name), index=True, header=True)
+
 if __name__ == '__main__':
 
 	try:
