@@ -67,6 +67,27 @@ def merge_all(dir_path):
 	end_date = df_data.iloc[len(df_data.index) - 1]['ts']
 	timeline = pd.date_range(start_date, end_date, freq='15T')
 
+	# get total count of sensors
+	sensor_count = len(files)
+
+	filtered_data = []
+
+	# create a new dataframe of all timestamps included(deduplicated)
+	result = timeline.to_frame(index=False, name='ts')
+
+	# merge every csv into timeframe dataframe
+	for index, item in enumerate(data):
+		try:
+			val_column = item.iloc[0][0]
+		except IndexError:
+			continue
+		
+		item['ts'] = pd.to_datetime(item['ts'])
+		item = item.rename(columns={'val': val_column}, copy=False)
+		item = pd.merge(result, item[['ts', val_column]], left_on='ts', right_on='ts', how='left', copy=False)
+		item.set_index(['ts'], inplace=True)
+		filtered_data.append(item)
+
 if __name__ == '__main__':
 
 	try:
