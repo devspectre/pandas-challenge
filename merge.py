@@ -4,6 +4,10 @@ import sys
 import pandas as pd
 import numpy as np
 
+files = []
+data = []
+path = ''
+
 def list_of_directories(dir_path):
 	"""get list of sub folders inside directory
 	Args:
@@ -31,6 +35,37 @@ def list_of_csv(dir_path):
 				files.append(os.path.join(dir_path, name))
 	except OSError:
 		raise SystemExit(f'Path does not exist or you need to wrap the path inside quotes.')
+
+def merge_all(dir_path):
+	"""merge all csv files in the dir_path into a single csv file
+	Args:
+		dir_path(str): absolute path to the source directory
+	Returns:
+		output_file_name(str), list of rows
+	"""
+
+	# get list of all csv files in the directory
+	list_of_csv(dir_path)
+
+	print(f'There are {len(files)} csv files in total!')
+
+	print(f'Reading csv files({len(files)}) ...')
+
+	for index, file in enumerate(files):
+		df = pd.read_csv(file)
+		df = df.replace(np.nan, '', regex=True)
+		data.append(df)
+		# print(df)
+		pbar.update(index + 1)
+
+	df_data = pd.concat(data)
+	df_data['ts'] = pd.to_datetime(df_data['ts'])
+	df_data.sort_values(by='ts', inplace=True)
+
+	# get first & last reading date
+	start_date = df_data.iloc[0]['ts']
+	end_date = df_data.iloc[len(df_data.index) - 1]['ts']
+	timeline = pd.date_range(start_date, end_date, freq='15T')
 
 if __name__ == '__main__':
 
