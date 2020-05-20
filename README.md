@@ -3,7 +3,7 @@ Processing data using pandas dataframe.
 
 The script generates a single csv from hundreds of csv files in a folder, concatenated one horizontally.
 
-Google style docstring.
+Google style guide.
 
 # Dependencies
 
