@@ -9,7 +9,7 @@ files = []
 data = []
 path = ''
 
-def list_of_directories(dir_path):
+def list_of_directories(dir_path: str) -> list:
 	"""get list of sub folders inside directory
 	Args:
 		dir_path(str): absolute path to the source directory
@@ -20,7 +20,7 @@ def list_of_directories(dir_path):
 	return [os.path.join(dir_path, name) for name in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, name))]
 
 
-def list_of_csv(dir_path):
+def list_of_csv(dir_path: str):
 	"""get list of all csv files in given path
 
 	Args:
@@ -39,7 +39,7 @@ def list_of_csv(dir_path):
 		raise SystemExit(f'Path does not exist or you need to wrap the path inside quotes.')
 
 
-def merge_all(dir_path):
+def merge_all(dir_path: str) -> str:
 	"""merge all csv files in the dir_path into a single csv file
 	Args:
 		dir_path(str): absolute path to the source directory
